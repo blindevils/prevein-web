@@ -1,548 +1,312 @@
-{\rtf1\ansi\ansicpg1252\cocoartf2822
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prevein Global | 铂远全球供应链 - 工程师级贸易与物流方案</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Inter:wght@300;400;600;700&display=swap');
+        
+        :root {
+            --primary: #003366;
+            --accent: #C5A059;
+            --bg: #FDFCFB;
+        }
 
-\f0\fs24 \cf0 <!DOCTYPE html>\
-<html lang="zh-CN">\
-<head>\
-    <meta charset="UTF-8">\
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">\
-    <title>Prevein Global | \uc0\u38082 \u36828 \u20840 \u29699 \u20379 \u24212 \u38142 </title>\
-    <script src="https://cdn.tailwindcss.com"></script>\
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>\
-    <style>\
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Inter:wght@300;400;600;700&display=swap');\
-        \
-        :root \{\
-            --primary: #003366;\
-            --accent: #C5A059;\
-            --bg: #FDFCFB;\
-        \}\
-\
-        html \{\
-            scroll-behavior: smooth;\
-        \}\
-\
-        body \{\
-            font-family: 'Inter', 'Noto Sans SC', sans-serif;\
-            background-color: var(--bg);\
-            color: #2D2D2D;\
-        \}\
-\
-        .chart-container \{\
-            position: relative;\
-            width: 100%;\
-            height: 350px;\
-            max-height: 400px;\
-        \}\
-\
-        .nav-link \{\
-            position: relative;\
-            transition: color 0.3s;\
-        \}\
-\
-        .nav-link::after \{\
-            content: '';\
-            position: absolute;\
-            width: 0;\
-            height: 2px;\
-            bottom: -4px;\
-            left: 0;\
-            background-color: var(--accent);\
-            transition: width 0.3s ease;\
-        \}\
-\
-        .nav-link:hover::after, .nav-active::after \{\
-            width: 100%;\
-        \}\
-\
-        .nav-active \{\
-            color: var(--primary) !important;\
-            font-weight: 700;\
-        \}\
-\
-        .lang-btn \{\
-            border: 1px solid #E5E7EB;\
-            padding: 2px 8px;\
-            border-radius: 4px;\
-            font-size: 12px;\
-            cursor: pointer;\
-            transition: all 0.2s;\
-        \}\
-        .lang-btn.active \{\
-            background: var(--primary);\
-            color: white;\
-            border-color: var(--primary);\
-        \}\
-\
-        .section-animate \{\
-            opacity: 0;\
-            transform: translateY(20px);\
-            transition: all 0.6s ease-out;\
-        \}\
-        .section-animate.visible \{\
-            opacity: 1;\
-            transform: translateY(0);\
-        \}\
-\
-        @media (max-width: 640px) \{\
-            .chart-container \{\
-                height: 300px;\
-            \}\
-        \}\
-    </style>\
-</head>\
-<body class="antialiased">\
-\
-    <!-- \uc0\u23548 \u33322 \u26639  -->\
-    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-200">\
-        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">\
-            <div class="flex items-center space-x-2 cursor-pointer" onclick="window.scrollTo(0,0)">\
-                <div class="w-10 h-10 bg-[#003366] rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-inner">P</div>\
-                <div class="flex flex-col">\
-                    <span class="text-xl font-bold tracking-tight text-[#003366] leading-none">PREVEIN <span class="text-[#C5A059]">GLOBAL</span></span>\
-                    <span id="nav-company-cn" class="text-[10px] text-stone-400 font-medium">\uc0\u28145 \u22323 \u38082 \u36828 \u20379 \u24212 \u38142 </span>\
-                </div>\
-            </div>\
-            \
-            <div class="hidden md:flex space-x-8 text-sm font-medium items-center">\
-                <a href="#home" id="nav-home" class="nav-link text-stone-600 hover:text-[#003366] relative">\uc0\u39318 \u39029 </a>\
-                <a href="#services" id="nav-services" class="nav-link text-stone-600 hover:text-[#003366] relative">\uc0\u29289 \u27969 \u20307 \u31995 </a>\
-                <a href="#trade" id="nav-trade" class="nav-link text-stone-600 hover:text-[#003366] relative">\uc0\u22806 \u36152 \u26381 \u21153 </a>\
-                <a href="#data" id="nav-data" class="nav-link text-stone-600 hover:text-[#003366] relative">\uc0\u25928 \u33021 \u20998 \u26512 </a>\
-                <a href="#about" id="nav-about" class="nav-link text-stone-600 hover:text-[#003366] relative">\uc0\u20851 \u20110 \u38082 \u36828 </a>\
-                <a href="#contact" id="nav-contact" class="nav-link text-stone-600 hover:text-[#003366] relative">\uc0\u32852 \u31995 \u21512 \u20316 </a>\
-                \
-                <div class="flex space-x-1 ml-4 border-l pl-4 border-stone-200">\
-                    <button id="btn-cn" onclick="setLanguage('cn')" class="lang-btn active">CN</button>\
-                    <button id="btn-en" onclick="setLanguage('en')" class="lang-btn">EN</button>\
-                </div>\
-            </div>\
-\
-            <div class="md:hidden flex space-x-1">\
-                <button onclick="setLanguage('cn')" class="text-xs px-2 py-1">CN</button>\
-                <button onclick="setLanguage('en')" class="text-xs px-2 py-1">EN</button>\
-            </div>\
-        </div>\
-    </nav>\
-\
-    <main>\
-        <!-- Hero Section -->\
-        <section id="home" class="relative py-32 md:py-48 px-6 overflow-hidden bg-stone-900">\
-            <div class="absolute inset-0 opacity-40">\
-                <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=2000" alt="Logistics and Trade Background" class="w-full h-full object-cover">\
-            </div>\
-            <div class="absolute inset-0 bg-gradient-to-r from-stone-900 via-stone-900/60 to-transparent"></div>\
-            \
-            <div class="relative max-w-7xl mx-auto text-white">\
-                <div class="max-w-3xl">\
-                    <span id="hero-tag" class="inline-block bg-[#C5A059] text-white text-xs font-bold px-3 py-1 rounded-sm mb-6 tracking-widest uppercase">Global Trade & SCM</span>\
-                    <h1 id="hero-title" class="text-4xl md:text-7xl font-bold mb-8 tracking-tight leading-tight">\
-                        \uc0\u24037 \u31243 \u24072 \u32423 \u30417 \u31649 <br><span class="text-[#C5A059]">\u38142 \u25509 \u20840 \u29699 </span>\u20379 \u24212 \u38142 \
-                    </h1>\
-                    <p id="hero-sub" class="text-xl md:text-2xl font-light mb-12 text-stone-300 leading-relaxed">\
-                        \uc0\u20381 \u25176 \u21271 \u20140 \u31185 \u25216 \u22823 \u23398 \u37319 \u30719 \u24037 \u31243 \u30805 \u22763 \u32972 \u26223 \u65292 \u20026 \u20840 \u29699 \u24037 \u19994 \u12289 \u33021 \u28304 \u21450 \u22522 \u24314 \u39033 \u30446 \u25552 \u20379 \u28085 \u30422 <strong>\u36152 \u26131 \u20195 \u29702 \u12289 \u25216 \u26415 \u37319 \u36141 \u21450 \u31934 \u20934 \u29289 \u27969 </strong>\u30340 \u19968 \u31449 \u24335 \u26041 \u26696 \u12290 \
-                    </p>\
-                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">\
-                        <a href="#contact" id="btn-audit" class="bg-[#C5A059] hover:bg-[#A38446] text-white px-10 py-4 rounded-sm font-bold transition-all shadow-xl text-center">\uc0\u33719 \u21462 \u36152 \u26131 \u19982 \u29289 \u27969 \u23457 \u35745 </a>\
-                        <a href="#trade" id="btn-explore" class="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white border border-white/30 px-10 py-4 rounded-sm font-bold transition-all text-center">\uc0\u25506 \u32034 \u22806 \u36152 \u26381 \u21153 </a>\
-                    </div>\
-                </div>\
-            </div>\
-        </section>\
-\
-        <!-- \uc0\u26680 \u24515 \u24046 \u24322 \u21270 \u20998 \u26512  -->\
-        <section class="py-24 px-6 max-w-7xl mx-auto section-animate">\
-            <div class="text-center mb-16">\
-                <h2 id="diff-title" class="text-3xl md:text-4xl font-bold text-[#003366] mb-4">\uc0\u20026 \u20160 \u20040 \u38082 \u36828 \u19981 \u20165 \u26159 \u36135 \u20195 \u65311 </h2>\
-                <p id="diff-sub" class="text-stone-500">\uc0\u19987 \u19994 \u24037 \u31243 \u32972 \u26223 \u36171 \u20104 \u20102 \u25105 \u20204 \u29702 \u35299 \u31934 \u23494 \u24037 \u19994 \u20135 \u21697 \u30340 \'93\u25216 \u26415 \u30524 \u20809 \'94</p>\
-            </div>\
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-16">\
-                <div class="flex flex-col items-center text-center group">\
-                    <div class="w-20 h-20 bg-stone-50 rounded-2xl flex items-center justify-center text-4xl mb-8 group-hover:bg-[#003366] group-hover:text-white transition-all shadow-sm">\uc0\u9874 \u65039 </div>\
-                    <h4 id="home-card-1-t" class="font-bold text-xl mb-4 text-stone-800">\uc0\u37319 \u30719 \u24037 \u31243 \u22522 \u22240 </h4>\
-                    <p id="home-card-1-d" class="text-stone-500 text-sm leading-relaxed px-4">\uc0\u25105 \u20204 \u35835 \u25026 \u25216 \u26415 \u35268 \u33539 \u19982 \u22270 \u32440 \u12290 \u22312 \u31934 \u23494 \u22791 \u20214 \u65288 \u22914 \u30005 \u32518 \u22841 \u12289 \u36830 \u25509 \u22120 \u65289 \u39046 \u22495 \u65292 \u25105 \u20204 \u33021 \u39044 \u20808 \u35782 \u21035 \u35268 \u26684 \u39118 \u38505 \u65292 \u38477 \u20302 \u27807 \u36890 \u25104 \u26412 \u12290 </p>\
-                </div>\
-                <div class="flex flex-col items-center text-center group">\
-                    <div class="w-20 h-20 bg-stone-50 rounded-2xl flex items-center justify-center text-4xl mb-8 group-hover:bg-[#003366] group-hover:text-white transition-all shadow-sm">\uc0\u55357 \u56525 </div>\
-                    <h4 id="home-card-2-t" class="font-bold text-xl mb-4 text-stone-800">\uc0\u28145 \u28595 \u21452 \u22522 \u22320 \u25191 \u34892 </h4>\
-                    <p id="home-card-2-d" class="text-stone-500 text-sm leading-relaxed px-4">\uc0\u32445 \u21345 \u26031 \u23572 \u24635 \u37096 \u31934 \u20934 \u25226 \u25511 \u30719 \u21306 \u38656 \u27714 \u65292 \u28145 \u22323 \u36816 \u33829 \u20013 \u24515 \u30452 \u25554 \u21046 \u36896 \u33145 \u22320 \u65292 \u23454 \u29616 \u20174 \u24037 \u21378 \u21040 \u24037 \u22320 \u30340 \'93\u31163 \u21378 \u21363 \u25511 \'94\u12290 </p>\
-                </div>\
-                <div class="flex flex-col items-center text-center group">\
-                    <div class="w-20 h-20 bg-stone-50 rounded-2xl flex items-center justify-center text-4xl mb-8 group-hover:bg-[#003366] group-hover:text-white transition-all shadow-sm">\uc0\u55356 \u57101 </div>\
-                    <h4 id="home-card-3-t" class="font-bold text-xl mb-3 text-stone-800">\uc0\u20840 \u29699 \u24037 \u19994 \u36208 \u24266 </h4>\
-                    <p id="home-card-3-d" class="text-stone-500 text-sm leading-relaxed px-4">\uc0\u19981 \u23616 \u38480 \u20110 \u29305 \u23450 \u33322 \u32447 \u12290 \u25105 \u20204 \u30340 \u30446 \u26631 \u26159 \u26500 \u24314 \u20174 \u20013 \u22269 \u21046 \u36896 \u24102 \u36890 \u24448 \u20840 \u29699 \u20851 \u38190 \u30719 \u21306 \u19982 \u33021 \u28304 \u22522 \u22320 \u30340 \u24037 \u19994 \u21697 \u32511 \u33394 \u36890 \u36947 \u12290 </p>\
-                </div>\
-            </div>\
-        </section>\
-\
-        <!-- \uc0\u22806 \u36152 \u26381 \u21153  Section -->\
-        <section id="trade" class="py-24 bg-white px-6 section-animate">\
-            <div class="max-w-7xl mx-auto">\
-                <div class="flex flex-col md:flex-row items-center gap-16">\
-                    <div class="md:w-1/2">\
-                        <h2 id="trade-title" class="text-3xl md:text-4xl font-bold text-[#003366] mb-8">\uc0\u24037 \u19994 \u21697 \u22806 \u36152 \u19982 \u25216 \u26415 \u20195 \u37319 </h2>\
-                        <p id="trade-intro" class="text-stone-600 text-lg mb-8 leading-relaxed">\
-                            \uc0\u38082 \u36828 \u19981 \u20165 \u36816 \u36865 \u36135 \u29289 \u65292 \u26356 \u20026 \u20840 \u29699 \u20080 \u23478 \u25552 \u20379 \u19987 \u19994 \u30340 \u37319 \u36141 \u20195 \u29702 \u19982 \u20986 \u21475 \u21512 \u35268 \u26381 \u21153 \u12290 \u25105 \u20204 \u22635 \u34917 \u20102 \'93\u28023 \u22806 \u24037 \u31243 \u38656 \u27714 \'94\u19982 \'93\u20013 \u22269 \u21046 \u36896 \u33021 \u21147 \'94\u20043 \u38388 \u30340 \u20449 \u24687 \u40511 \u27807 \u12290 \
-                        </p>\
-                        <div class="space-y-6">\
-                            <div class="flex items-start gap-4">\
-                                <div class="w-12 h-12 bg-stone-100 rounded-full flex items-center justify-center shrink-0 text-[#C5A059]">\uc0\u10003 </div>\
-                                <div>\
-                                    <h5 id="t1-t" class="font-bold text-stone-900 mb-1">\uc0\u19987 \u19994 \u25216 \u26415 \u20195 \u37319 </h5>\
-                                    <p id="t1-d" class="text-stone-500 text-sm">\uc0\u26681 \u25454 \u30719 \u21306 /\u24037 \u22320 \u25216 \u26415 \u26631 \u20934 \u65292 \u22312 \u20013 \u22269 \u21046 \u36896 \u24102 \u23547 \u25214 \u39640 \u21305 \u37197 \u24230 \u20379 \u24212 \u21830 \u65292 \u24182 \u36827 \u34892 \u26679 \u20214 \u23553 \u27979 \u12290 </p>\
-                                </div>\
-                            </div>\
-                            <div class="flex items-start gap-4">\
-                                <div class="w-12 h-12 bg-stone-100 rounded-full flex items-center justify-center shrink-0 text-[#C5A059]">\uc0\u10003 </div>\
-                                <div>\
-                                    <h5 id="t2-t" class="font-bold text-stone-900 mb-1">\uc0\u20986 \u21475 \u20195 \u29702 \u19982 \u21512 \u35268 </h5>\
-                                    <p id="t2-d" class="text-stone-500 text-sm">\uc0\u25552 \u20379 \u25910 \u27719 \u12289 \u32467 \u27719 \u12289 \u20986 \u21475 \u25253 \u20851 \u21450 \u36864 \u31246 \u20195 \u29702 \u65292 \u30830 \u20445 \u27599 \u19968 \u31508 \u22269 \u38469 \u36152 \u26131 \u31526 \u21512 \u27861 \u35268 \u35201 \u27714 \u12290 </p>\
-                                </div>\
-                            </div>\
-                            <div class="flex items-start gap-4">\
-                                <div class="w-12 h-12 bg-stone-100 rounded-full flex items-center justify-center shrink-0 text-[#C5A059]">\uc0\u10003 </div>\
-                                <div>\
-                                    <h5 id="t3-t" class="font-bold text-stone-900 mb-1">\uc0\u20840 \u29699 \u36152 \u26131 \u26041 \u26696 \u35774 \u35745 </h5>\
-                                    <p id="t3-d" class="text-stone-500 text-sm">\uc0\u38024 \u23545 \u36328 \u22269 \u39033 \u30446 \u65292 \u35774 \u35745 \u26368 \u20248 \u30340 \u36152 \u26131 \u26550 \u26500 \u65288 \u22914 \u31163 \u23736 \u36152 \u26131 \u12289 \u36716 \u21475 \u36152 \u26131 \u65289 \u65292 \u38477 \u20302 \u39033 \u30446 \u32508 \u21512 \u25104 \u26412 \u12290 </p>\
-                                </div>\
-                            </div>\
-                        </div>\
-                    </div>\
-                    <div class="md:w-1/2 bg-stone-50 p-8 rounded-3xl border border-stone-100 shadow-inner">\
-                        <div class="space-y-8">\
-                            <div class="bg-white p-6 rounded-2xl shadow-sm">\
-                                <div id="trade-box-1-t" class="text-xs font-bold text-[#C5A059] uppercase mb-2 tracking-widest">Sourcing Example</div>\
-                                <h6 id="trade-box-1-h" class="text-lg font-bold text-[#003366] mb-2">\uc0\u39640 \u21387 \u30005 \u32518 \u31995 \u32479 \u37319 \u36141 </h6>\
-                                <p id="trade-box-1-p" class="text-stone-500 text-sm">\uc0\u20174 \u23547 \u25214 \u20013 \u22269 \u22836 \u37096 \u21378 \u23478 \u65292 \u21040 \u25216 \u26415 \u35268 \u33539 \u26680 \u23545 \u65292 \u20877 \u21040 \u20986 \u21475 \u28595 \u27954 \u30340 \u20840 \u27969 \u31243 \u30417 \u31649 \u65292 \u38082 \u36828 \u33410 \u30465 \u20102 \u23458 \u25143  30% \u30340 \u37319 \u36141 \u25104 \u26412 \u12290 </p>\
-                            </div>\
-                            <div class="bg-white p-6 rounded-2xl shadow-sm">\
-                                <div id="trade-box-2-t" class="text-xs font-bold text-[#C5A059] uppercase mb-2 tracking-widest">Compliance Focus</div>\
-                                <h6 id="trade-box-2-h" class="text-lg font-bold text-[#003366] mb-2">AS/NZS \uc0\u26631 \u20934 \u23545 \u40784 </h6>\
-                                <p id="trade-box-2-p" class="text-stone-500 text-sm">\uc0\u30830 \u20445 \u20013 \u22269 \u20986 \u21475 \u30340 \u27599 \u19968 \u20214 \u24037 \u19994 \u21697 \u22343 \u31526 \u21512 \u30446 \u30340 \u22320 \u65288 \u22914 \u28595 \u27954 \u65289 \u30340 \u20934 \u20837 \u26631 \u20934 \u19982 \u35748 \u35777 \u35201 \u27714 \u12290 </p>\
-                            </div>\
-                        </div>\
-                    </div>\
-                </div>\
-            </div>\
-        </section>\
-\
-        <!-- \uc0\u29289 \u27969 \u20307 \u31995  Section (\u21407 \u26381 \u21153 \u20307 \u31995 ) -->\
-        <section id="services" class="py-24 bg-stone-50 px-6 section-animate">\
-            <div class="max-w-7xl mx-auto">\
-                <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 space-y-6 md:space-y-0">\
-                    <div class="max-w-2xl">\
-                        <h2 id="service-title" class="text-3xl md:text-4xl font-bold text-stone-900 mb-4">\uc0\u31934 \u20934 \u29289 \u27969 \u20307 \u31995 </h2>\
-                        <p id="service-sub" class="text-stone-500">\uc0\u31471 \u21040 \u31471 \u30340 \u24037 \u19994 \u21697 \u20379 \u24212 \u38142 \u35299 \u20915 \u26041 \u26696 \u65292 \u19987 \u27880 \u20110 \u39640 \u20215 \u20540 \u12289 \u39640 \u26102 \u25928 \u12289 \u39640 \u25216 \u26415 \u35201 \u27714 \u30340 \u36135 \u21697 \u12290 </p>\
-                    </div>\
-                    <div class="h-1 w-24 bg-[#C5A059]"></div>\
-                </div>\
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">\
-                    <div class="p-10 rounded-xl bg-white shadow-sm border border-stone-100 hover:border-[#C5A059] transition-all group">\
-                        <div class="text-4xl mb-8 opacity-80 group-hover:opacity-100">\uc0\u55357 \u56994 </div>\
-                        <h4 id="s1-t" class="text-xl font-bold mb-4 text-[#003366]">\uc0\u20840 \u29699 \u39033 \u30446 \u29289 \u27969 </h4>\
-                        <p id="s1-d" class="text-stone-600 text-sm leading-relaxed">\uc0\u22823 \u22411 \u30719 \u23665 \u26426 \u26800 \u12289 \u33021 \u28304 \u35774 \u22791 \u36816 \u36755 \u12290 \u22788 \u29702 \u21508 \u31867 \u36229 \u38480 \u29305 \u31181 \u36135 \u21697 \u12289 \u22810 \u24335 \u32852 \u36816 \u21450 \u20559 \u36828 \u22320 \u21306 \u26368 \u21518 \u19968 \u20844 \u37324 \u20132 \u20184 \u12290 </p>\
-                    </div>\
-                    <div class="p-10 rounded-xl bg-white shadow-sm border border-stone-100 hover:border-[#C5A059] transition-all group">\
-                        <div class="text-4xl mb-8 opacity-80 group-hover:opacity-100">\uc0\u9992 \u65039 </div>\
-                        <h4 id="s2-t" class="text-xl font-bold mb-4 text-[#003366]">\uc0\u31934 \u23494 \u20214 \u31354 \u36816 \u19987 \u32447 </h4>\
-                        <p id="s2-d" class="text-stone-600 text-sm leading-relaxed">\uc0\u38024 \u23545 PLC\u12289 \u20256 \u24863 \u22120 \u31561 \u24212 \u24613 \u22791 \u20214 \u65292 \u25552 \u20379 \u20174 \u20013 \u22269 \u30452 \u39134 \u20840 \u29699 \u30340 \u26497 \u36895 \u20445 \u38556 \u65292 \u26368 \u22823 \u31243 \u24230 \u20943 \u23569 \u29616 \u22330 \u20572 \u24037 \u25439 \u22833 \u12290 </p>\
-                    </div>\
-                    <div class="p-10 rounded-xl bg-white shadow-sm border border-stone-100 hover:border-[#C5A059] transition-all group">\
-                        <div class="text-4xl mb-8 opacity-80 group-hover:opacity-100">\uc0\u55357 \u56590 </div>\
-                        <h4 id="s3-t" class="text-xl font-bold mb-4 text-[#003366]">\uc0\u36827 \u20986 \u21475 \u21697 \u25511 \u30417 \u31649 </h4>\
-                        <p id="s3-d" class="text-stone-600 text-sm leading-relaxed">\uc0\u21033 \u29992 \u24037 \u31243 \u32972 \u26223 \u36827 \u34892 \u20986 \u21378 \u21069 \u26657 \u39564 \u12290 \u25105 \u20204 \u19981 \u20165 \u26159 \u36816 \u36755 \u32773 \u65292 \u26356 \u26159 \u24744 \u22312 \u36152 \u26131 \u38142 \u36335 \u19978 \u30340 \'93\u36136 \u37327 \u30475 \u38376 \u20154 \'94\u12290 </p>\
-                    </div>\
-                </div>\
-            </div>\
-        </section>\
-\
-        <!-- \uc0\u25968 \u25454 \u20998 \u26512  Section -->\
-        <section id="data" class="py-24 bg-white px-6 section-animate">\
-            <div class="max-w-7xl mx-auto">\
-                <div class="text-center mb-16">\
-                    <h2 id="data-title" class="text-3xl font-bold text-stone-900 mb-4">\uc0\u38082 \u36828 \u25928 \u33021 \u20998 \u26512 </h2>\
-                    <p id="data-sub" class="text-stone-600 max-w-2xl mx-auto">\uc0\u25968 \u25454 \u21270 \u20915 \u31574 \u26159 \u25105 \u20204 \u30340 \u26680 \u24515 \u12290 \u36890 \u36807 \u25216 \u26415 \u25163 \u27573 \u20248 \u21270 \u29615 \u33410 \u65292 \u23454 \u27979 \u26102 \u25928 \u27604 \u20256 \u32479 \u27169 \u24335 \u25552 \u21319  20% \u20197 \u19978 \u12290 </p>\
-                </div>\
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">\
-                    <div class="lg:col-span-1 space-y-6">\
-                        <button onclick="updateChart('efficiency')" id="data-btn-1" class="w-full text-left p-6 bg-stone-50 rounded-xl border-l-4 border-[#003366] hover:bg-[#003366] hover:text-white transition-all shadow-sm">\
-                            <span class="block font-bold">\uc0\u29289 \u27969 \u26102 \u25928 \u23545 \u27604 </span>\
-                            <span class="text-xs opacity-60">Lead Time Comparison</span>\
-                        </button>\
-                        <button onclick="updateChart('categories')" id="data-btn-2" class="w-full text-left p-6 bg-stone-50 rounded-xl border-l-4 border-[#C5A059] hover:bg-[#C5A059] hover:text-white transition-all shadow-sm">\
-                            <span class="block font-bold">\uc0\u36152 \u26131 \u36135 \u21697 \u20998 \u24067 </span>\
-                            <span class="text-xs opacity-60">Cargo Distribution</span>\
-                        </button>\
-                    </div>\
-                    <div class="lg:col-span-2 bg-stone-50 p-8 md:p-12 rounded-3xl">\
-                        <div id="chart-title" class="text-xl font-bold text-stone-800 mb-8 border-b border-stone-200 pb-4">\uc0\u21152 \u36733 \u20013 ...</div>\
-                        <div class="chart-container">\
-                            <canvas id="businessChart"></canvas>\
-                        </div>\
-                    </div>\
-                </div>\
-            </div>\
-        </section>\
-\
-        <!-- \uc0\u20851 \u20110 \u25105 \u20204  Section -->\
-        <section id="about" class="py-24 px-6 max-w-7xl mx-auto section-animate">\
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">\
-                <div class="order-2 lg:order-1">\
-                    <h2 id="about-t" class="text-3xl md:text-4xl font-bold mb-8 text-stone-900">\uc0\u21019 \u22987 \u20154 \u25925 \u20107 \u65306 \u20174 \u30719 \u33033 \u21040 \u38142 \u36335 </h2>\
-                    <p id="about-d1" class="text-stone-600 mb-8 leading-relaxed text-lg">\
-                        \uc0\u38082 \u36828  (Prevein) \u30340 \u21019 \u22987 \u20154 \u27605 \u19994 \u20110 <strong>\u21271 \u20140 \u31185 \u25216 \u22823 \u23398 \u37319 \u30719 \u24037 \u31243 \u19987 \u19994 </strong>\u65292 \u25317 \u26377 \u24037 \u23398 \u30805 \u22763 \u23398 \u20301 \u12290 \u28145 \u21402 \u30340 \u32972 \u26223 \u35753 \u25105 \u20204 \u22312 \u38754 \u23545 \u22797 \u26434 \u30340 \u24037 \u19994 \u20135 \u21697 \u26102 \u65292 \u25317 \u26377 \u27604 \u20256 \u32479 \u22806 \u36152 \u21644 \u29289 \u27969 \u20174 \u19994 \u32773 \u26356 \u25935 \u38160 \u30340 \u25216 \u26415 \u35302 \u35273 \u12290 \
-                    </p>\
-                    <p id="about-d2" class="text-stone-600 leading-relaxed text-lg">\
-                        \uc0\u25105 \u20204 \u22362 \u20449 \u65292 \u20379 \u24212 \u38142 \u30340 \u26412 \u36136 \u19981 \u20165 \u26159 \u36135 \u29289 \u30340 \u31227 \u21160 \u65292 \u26356 \u26159 \u20449 \u24687 \u30340 \u31934 \u20934 \u20256 \u36882 \u19982 \u36152 \u26131 \u21512 \u35268 \u30340 \u26497 \u33268 \u25191 \u34892 \u12290 \u22312 \u32445 \u21345 \u26031 \u23572 \u19982 \u28145 \u22323 \u20043 \u38388 \u65292 \u25105 \u20204 \u26500 \u24314 \u30340 \u19981 \u20165 \u26159 \u36152 \u26131 \u36208 \u24266 \u65292 \u26356 \u26159 \u22522 \u20110 \u19987 \u19994 \u25216 \u26415 \u30340 \u20840 \u29699 \u20449 \u20219 \u24863 \u12290 \
-                    </p>\
-                    <div class="mt-10 flex space-x-6">\
-                        <div class="bg-stone-100 p-4 rounded-lg">\
-                            <div class="text-2xl font-bold text-[#003366]">100%</div>\
-                            <div id="stat-1" class="text-[10px] text-stone-400 uppercase tracking-widest">\uc0\u25216 \u26415 \u26680 \u39564 \u35206 \u30422 </div>\
-                        </div>\
-                        <div class="bg-stone-100 p-4 rounded-lg">\
-                            <div class="text-2xl font-bold text-[#003366]">15+</div>\
-                            <div id="stat-2" class="text-[10px] text-stone-400 uppercase tracking-widest">\uc0\u34892 \u19994 \u27785 \u28096 \u24180 \u25968 </div>\
-                        </div>\
-                    </div>\
-                </div>\
-                <div class="order-1 lg:order-2 bg-[#003366] p-12 rounded-3xl text-white shadow-2xl relative overflow-hidden group">\
-                    <div class="absolute -top-10 -right-10 w-40 h-40 bg-[#C5A059] rounded-full opacity-10 group-hover:scale-150 transition-transform duration-700"></div>\
-                    <div class="relative z-10">\
-                        <div class="text-6xl text-[#C5A059] mb-8 italic">\'93</div>\
-                        <h4 class="text-3xl font-bold mb-6 italic leading-snug">Technical Integrity in Every Shipment.</h4>\
-                        <p class="text-stone-400 text-lg">\uc0\u36152 \u26131 \u30340 \u26680 \u24515 \u26159 \u39118 \u38505 \u39044 \u25511 \u19982 \u20215 \u20540 \u23545 \u40784 \u12290 </p>\
-                        <div class="mt-12 flex items-center space-x-4">\
-                            <div class="w-12 h-1 bg-[#C5A059]"></div>\
-                            <span class="text-sm font-bold tracking-widest uppercase">Founder & M.Eng in Mining</span>\
-                        </div>\
-                    </div>\
-                </div>\
-            </div>\
-        </section>\
-\
-        <!-- \uc0\u32852 \u31995 \u25105 \u20204  Section -->\
-        <section id="contact" class="py-24 bg-stone-900 text-white px-6">\
-            <div class="max-w-7xl mx-auto">\
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-20">\
-                    <div>\
-                        <h2 id="contact-t" class="text-3xl md:text-4xl font-bold mb-8 text-[#C5A059]">\uc0\u24320 \u21551 \u20840 \u29699 \u19987 \u19994 \u21327 \u20316 </h2>\
-                        <p class="text-stone-400 mb-12 text-lg">\uc0\u26080 \u35770 \u24744 \u30340 \u39033 \u30446 \u22312 \u20309 \u26041 \u65292 \u38082 \u36828 \u37117 \u33021 \u20026 \u24744 \u25552 \u20379 \u30828 \u26680 \u30340 \u36152 \u26131 \u25903 \u25345 \u19982 \u29289 \u27969 \u20445 \u38556 \u12290 </p>\
-                        \
-                        <div class="space-y-12">\
-                            <div class="flex items-start space-x-6">\
-                                <div class="text-3xl bg-white/5 p-4 rounded-xl">\uc0\u55356 \u56806 \u55356 \u56826 </div>\
-                                <div>\
-                                    <h5 class="font-bold text-xl mb-1 text-white">Australia HQ (Newcastle)</h5>\
-                                    <p class="text-stone-400">Bar Beach, Newcastle, NSW 2300</p>\
-                                </div>\
-                            </div>\
-                            <div class="flex items-start space-x-6">\
-                                <div class="text-3xl bg-white/5 p-4 rounded-xl">\uc0\u55356 \u56808 \u55356 \u56819 </div>\
-                                <div>\
-                                    <h5 class="font-bold text-xl mb-1 text-white">Shenzhen Center (Bao'an)</h5>\
-                                    <p class="text-stone-300">\uc0\u28145 \u22323 \u24066 \u23453 \u23433 \u21306 \u35199 \u20065 \u34903 \u36947 \u28385 \u20140 \u21326 \u33402 \u23782 \u22823 \u21414 1\u24231 1002</p>\
-                                </div>\
-                            </div>\
-                            <div class="flex items-start space-x-6">\
-                                <div class="text-3xl bg-white/5 p-4 rounded-xl">\uc0\u55357 \u56551 </div>\
-                                <div>\
-                                    <h5 class="font-bold text-xl mb-1 text-white">Email Inquiry</h5>\
-                                    <p class="text-stone-400">info@prevein.com</p>\
-                                </div>\
-                            </div>\
-                        </div>\
-                    </div>\
-                    \
-                    <div class="bg-white p-10 md:p-14 rounded-3xl shadow-2xl">\
-                        <form onsubmit="event.preventDefault(); alert('Inquiry Sent! \uc0\u25105 \u20204 \u23558 \u23613 \u24555 \u32852 \u31995 \u24744 \u12290 ');" class="space-y-8">\
-                            <div>\
-                                <label class="block text-stone-400 text-xs font-bold uppercase mb-2">Name / \uc0\u20844 \u21496 \u21517 \u31216 </label>\
-                                <input type="text" class="w-full border-b border-stone-200 py-3 focus:border-[#C5A059] outline-none text-stone-800 transition-colors">\
-                            </div>\
-                            <div>\
-                                <label class="block text-stone-400 text-xs font-bold uppercase mb-2">Email / \uc0\u37038 \u31665 </label>\
-                                <input type="email" class="w-full border-b border-stone-200 py-3 focus:border-[#C5A059] outline-none text-stone-800 transition-colors">\
-                            </div>\
-                            <div>\
-                                <label class="block text-stone-400 text-xs font-bold uppercase mb-2">Project Requirements / \uc0\u24744 \u30340 \u38656 \u27714 </label>\
-                                <textarea rows="4" class="w-full border-b border-stone-200 py-3 focus:border-[#C5A059] outline-none text-stone-800 transition-colors"></textarea>\
-                            </div>\
-                            <button id="btn-submit" class="w-full bg-[#003366] text-white py-5 rounded-lg font-bold text-lg hover:bg-[#002244] transition-all shadow-lg transform hover:-translate-y-1">\uc0\u25552 \u20132 \u21672 \u35810  | Send Inquiry</button>\
-                        </form>\
-                    </div>\
-                </div>\
-            </div>\
-        </section>\
-\
-    </main>\
-\
-    <!-- \uc0\u39029 \u33050  -->\
-    <footer class="py-12 bg-black text-white px-6 text-center text-xs opacity-50 border-t border-white/5">\
-        <p>\'a9 2026 PREVEIN GLOBAL | \uc0\u28145 \u22323 \u38082 \u36828 \u20379 \u24212 \u38142 \u31649 \u29702 \u26377 \u38480 \u20844 \u21496 . All Rights Reserved.</p>\
-        <p class="mt-4 tracking-widest uppercase font-light">Technical Trade \'95 Logistics Excellence \'95 Global Connectivity</p>\
-    </footer>\
-\
-    <script>\
-        let currentLang = 'cn';\
-        let myChart;\
-\
-        // \uc0\u21452 \u35821 \u25968 \u25454 \u23383 \u20856 \
-        const langData = \{\
-            cn: \{\
-                'nav-home': '\uc0\u39318 \u39029 ', 'nav-services': '\u29289 \u27969 \u20307 \u31995 ', 'nav-trade': '\u22806 \u36152 \u26381 \u21153 ', 'nav-data': '\u25928 \u33021 \u20998 \u26512 ', 'nav-about': '\u20851 \u20110 \u38082 \u36828 ', 'nav-contact': '\u32852 \u31995 \u21512 \u20316 ', 'nav-company-cn': '\u28145 \u22323 \u38082 \u36828 \u20379 \u24212 \u38142 ',\
-                'hero-tag': '\uc0\u20840 \u29699 \u36152 \u26131 \u19982 \u20379 \u24212 \u38142 ',\
-                'hero-title': '\uc0\u24037 \u31243 \u24072 \u32423 \u30417 \u31649 <br><span class="text-[#C5A059]">\u38142 \u25509 \u20840 \u29699 </span>\u20379 \u24212 \u38142 ',\
-                'hero-sub': '\uc0\u20381 \u25176 \u21271 \u20140 \u31185 \u25216 \u22823 \u23398 \u37319 \u30719 \u24037 \u31243 \u30805 \u22763 \u32972 \u26223 \u65292 \u20026 \u20840 \u29699 \u24037 \u19994 \u12289 \u33021 \u28304 \u21450 \u22522 \u24314 \u39033 \u30446 \u25552 \u20379 \u28085 \u30422 <strong>\u36152 \u26131 \u20195 \u29702 \u12289 \u25216 \u26415 \u37319 \u36141 \u21450 \u31934 \u20934 \u29289 \u27969 </strong>\u30340 \u19968 \u31449 \u24335 \u26041 \u26696 \u12290 ',\
-                'btn-audit': '\uc0\u33719 \u21462 \u36152 \u26131 \u19982 \u29289 \u27969 \u23457 \u35745 ', 'btn-explore': '\u25506 \u32034 \u22806 \u36152 \u26381 \u21153 ',\
-                'diff-title': '\uc0\u20026 \u20160 \u20040 \u38082 \u36828 \u19981 \u20165 \u26159 \u36135 \u20195 \u65311 ', 'diff-sub': '\u19987 \u19994 \u24037 \u31243 \u32972 \u26223 \u36171 \u20104 \u20102 \u25105 \u20204 \u29702 \u35299 \u31934 \u23494 \u24037 \u19994 \u20135 \u21697 \u30340 \'93\u25216 \u26415 \u30524 \u20809 \'94',\
-                'home-card-1-t': '\uc0\u37319 \u30719 \u24037 \u31243 \u22522 \u22240 ', 'home-card-1-d': '\u25105 \u20204 \u35835 \u25026 \u25216 \u26415 \u35268 \u33539 \u19982 \u22270 \u32440 \u12290 \u22312 \u31934 \u23494 \u22791 \u20214 \u65288 \u22914 \u30005 \u32518 \u22841 \u12289 \u36830 \u25509 \u22120 \u65289 \u39046 \u22495 \u65292 \u25105 \u20204 \u33021 \u39044 \u20808 \u35782 \u21035 \u35268 \u26684 \u39118 \u38505 \u65292 \u38477 \u20302 \u27807 \u36890 \u25104 \u26412 \u12290 ',\
-                'home-card-2-t': '\uc0\u28145 \u28595 \u21452 \u22522 \u22320 \u25191 \u34892 ', 'home-card-2-d': '\u32445 \u21345 \u26031 \u23572 \u24635 \u37096 \u31934 \u20934 \u25226 \u25511 \u30719 \u21306 \u38656 \u27714 \u65292 \u28145 \u22323 \u36816 \u33829 \u20013 \u24515 \u30452 \u25554 \u21046 \u36896 \u33145 \u22320 \u65292 \u23454 \u29616 \u20174 \u24037 \u21378 \u21040 \u24037 \u22320 \u30340 \'93\u31163 \u21378 \u21363 \u25511 \'94\u12290 ',\
-                'home-card-3-t': '\uc0\u20840 \u29699 \u24037 \u19994 \u36208 \u24266 ', 'home-card-3-d': '\u19981 \u23616 \u38480 \u20110 \u29305 \u23450 \u33322 \u32447 \u12290 \u25105 \u20204 \u30340 \u30446 \u26631 \u26159 \u26500 \u24314 \u20174 \u20013 \u22269 \u21046 \u36896 \u24102 \u36890 \u24448 \u20840 \u29699 \u20851 \u38190 \u30719 \u21306 \u19982 \u33021 \u28304 \u22522 \u22320 \u30340 \u24037 \u19994 \u21697 \u32511 \u33394 \u36890 \u36947 \u12290 ',\
-                'trade-title': '\uc0\u24037 \u19994 \u21697 \u22806 \u36152 \u19982 \u25216 \u26415 \u20195 \u37319 ',\
-                'trade-intro': '\uc0\u38082 \u36828 \u19981 \u20165 \u36816 \u36865 \u36135 \u29289 \u65292 \u26356 \u20026 \u20840 \u29699 \u20080 \u23478 \u25552 \u20379 \u19987 \u19994 \u30340 \u37319 \u36141 \u20195 \u29702 \u19982 \u20986 \u21475 \u21512 \u35268 \u26381 \u21153 \u12290 \u25105 \u20204 \u22635 \u34917 \u20102 \'93\u28023 \u22806 \u24037 \u31243 \u38656 \u27714 \'94\u19982 \'93\u20013 \u22269 \u21046 \u36896 \u33021 \u21147 \'94\u20043 \u38388 \u30340 \u20449 \u24687 \u40511 \u27807 \u12290 ',\
-                't1-t': '\uc0\u19987 \u19994 \u25216 \u26415 \u20195 \u37319 ', 't1-d': '\u26681 \u25454 \u30719 \u21306 /\u24037 \u22320 \u25216 \u26415 \u26631 \u20934 \u65292 \u22312 \u20013 \u22269 \u21046 \u36896 \u24102 \u23547 \u25214 \u39640 \u21305 \u37197 \u24230 \u20379 \u24212 \u21830 \u65292 \u24182 \u36827 \u34892 \u26679 \u20214 \u23553 \u27979 \u12290 ',\
-                't2-t': '\uc0\u20986 \u21475 \u20195 \u29702 \u19982 \u21512 \u35268 ', 't2-d': '\u25552 \u20379 \u25910 \u27719 \u12289 \u32467 \u27719 \u12289 \u20986 \u21475 \u25253 \u20851 \u21450 \u36864 \u31246 \u20195 \u29702 \u65292 \u30830 \u20445 \u27599 \u19968 \u31508 \u22269 \u38469 \u36152 \u26131 \u31526 \u21512 \u27861 \u35268 \u35201 \u27714 \u12290 ',\
-                't3-t': '\uc0\u20840 \u29699 \u36152 \u26131 \u26041 \u26696 \u35774 \u35745 ', 't3-d': '\u38024 \u23545 \u36328 \u22269 \u39033 \u30446 \u65292 \u35774 \u35745 \u26368 \u20248 \u30340 \u36152 \u26131 \u26550 \u26500 \u65288 \u22914 \u31163 \u23736 \u36152 \u26131 \u12289 \u36716 \u21475 \u36152 \u26131 \u65289 \u65292 \u38477 \u20302 \u39033 \u30446 \u32508 \u21512 \u25104 \u26412 \u12290 ',\
-                'trade-box-1-t': '\uc0\u20195 \u37319 \u26696 \u20363 ', 'trade-box-1-h': '\u39640 \u21387 \u30005 \u32518 \u31995 \u32479 \u37319 \u36141 ', 'trade-box-1-p': '\u20174 \u23547 \u25214 \u20013 \u22269 \u22836 \u37096 \u21378 \u23478 \u65292 \u21040 \u25216 \u26415 \u35268 \u33539 \u26680 \u23545 \u65292 \u20877 \u21040 \u20986 \u21475 \u28595 \u27954 \u30340 \u20840 \u27969 \u31243 \u30417 \u31649 \u65292 \u38082 \u36828 \u33410 \u30465 \u20102 \u23458 \u25143  30% \u30340 \u37319 \u36141 \u25104 \u26412 \u12290 ',\
-                'trade-box-2-t': '\uc0\u21512 \u35268 \u32858 \u28966 ', 'trade-box-2-h': 'AS/NZS \u26631 \u20934 \u23545 \u40784 ', 'trade-box-2-p': '\u30830 \u20445 \u20013 \u22269 \u20986 \u21475 \u30340 \u27599 \u19968 \u20214 \u24037 \u19994 \u21697 \u22343 \u31526 \u21512 \u30446 \u30340 \u22320 \u65288 \u22914 \u28595 \u27954 \u65289 \u30340 \u20934 \u20837 \u26631 \u20934 \u19982 \u35748 \u35777 \u35201 \u27714 \u12290 ',\
-                'service-title': '\uc0\u31934 \u20934 \u29289 \u27969 \u20307 \u31995 ', 'service-sub': '\u31471 \u21040 \u31471 \u30340 \u24037 \u19994 \u21697 \u20379 \u24212 \u38142 \u35299 \u20915 \u26041 \u26696 \u65292 \u19987 \u27880 \u20110 \u39640 \u20215 \u20540 \u12289 \u39640 \u26102 \u25928 \u12289 \u39640 \u25216 \u26415 \u35201 \u27714 \u30340 \u36135 \u21697 \u12290 ',\
-                's1-t': '\uc0\u20840 \u29699 \u39033 \u30446 \u29289 \u27969 ', 's1-d': '\u22823 \u22411 \u30719 \u23665 \u26426 \u26800 \u12289 \u33021 \u28304 \u35774 \u22791 \u36816 \u36755 \u12290 \u22788 \u29702 \u21508 \u31867 \u36229 \u38480 \u29305 \u31181 \u36135 \u21697 \u12289 \u22810 \u24335 \u32852 \u36816 \u21450 \u20559 \u36828 \u22320 \u21306 \u26368 \u21518 \u19968 \u20844 \u37324 \u20132 \u20184 \u12290 ',\
-                's2-t': '\uc0\u31934 \u23494 \u20214 \u31354 \u36816 \u19987 \u32447 ', 's2-d': '\u38024 \u23545 PLC\u12289 \u20256 \u24863 \u22120 \u31561 \u24212 \u24613 \u22791 \u20214 \u65292 \u25552 \u20379 \u20174 \u20013 \u22269 \u30452 \u39134 \u20840 \u29699 \u30340 \u26497 \u36895 \u20445 \u38556 \u65292 \u26368 \u22823 \u31243 \u24230 \u20943 \u23569 \u29616 \u22330 \u20572 \u24037 \u25439 \u22833 \u12290 ',\
-                's3-t': '\uc0\u36827 \u20986 \u21475 \u21697 \u25511 \u30417 \u31649 ', 's3-d': '\u21033 \u29992 \u24037 \u31243 \u32972 \u26223 \u36827 \u34892 \u20986 \u21378 \u21069 \u26657 \u39564 \u12290 \u25105 \u20204 \u19981 \u20165 \u26159 \u36816 \u36755 \u32773 \u65292 \u26356 \u26159 \u24744 \u22312 \u36152 \u26131 \u38142 \u36335 \u19978 \u30340 \'93\u36136 \u37327 \u30475 \u38376 \u20154 \'94\u12290 ',\
-                'data-title': '\uc0\u38082 \u36828 \u25928 \u33021 \u20998 \u26512 ', 'data-sub': '\u25968 \u25454 \u21270 \u20915 \u31574 \u26159 \u25105 \u20204 \u30340 \u26680 \u24515 \u12290 \u36890 \u36807 \u25216 \u26415 \u25163 \u27573 \u20248 \u21270 \u29615 \u33410 \u65292 \u23454 \u27979 \u26102 \u25928 \u27604 \u20256 \u32479 \u27169 \u24335 \u25552 \u21319  20% \u20197 \u19978 \u12290 ',\
-                'data-btn-1': '\uc0\u29289 \u27969 \u26102 \u25928 \u23545 \u27604 ', 'data-btn-2': '\u36152 \u26131 \u36135 \u21697 \u20998 \u24067 ',\
-                'about-t': '\uc0\u21019 \u22987 \u20154 \u25925 \u20107 \u65306 \u20174 \u30719 \u33033 \u21040 \u38142 \u36335 ', 'about-d1': '\u38082 \u36828  (Prevein) \u30340 \u21019 \u22987 \u20154 \u27605 \u19994 \u20110 \u21271 \u20140 \u31185 \u25216 \u22823 \u23398 \u37319 \u30719 \u24037 \u31243 \u19987 \u19994 \u65292 \u25317 \u26377 \u24037 \u23398 \u30805 \u22763 \u23398 \u20301 \u12290 \u28145 \u21402 \u30340 \u32972 \u26223 \u35753 \u25105 \u20204 \u22312 \u38754 \u23545 \u22797 \u26434 \u30340 \u24037 \u19994 \u20135 \u21697 \u26102 \u65292 \u25317 \u26377 \u27604 \u20256 \u32479 \u22806 \u36152 \u21644 \u29289 \u27969 \u20174 \u19994 \u32773 \u26356 \u25935 \u38160 \u30340 \u25216 \u26415 \u35302 \u35273 \u12290 ',\
-                'about-d2': '\uc0\u25105 \u20204 \u22362 \u20449 \u65292 \u20379 \u24212 \u38142 \u30340 \u26412 \u36136 \u19981 \u20165 \u26159 \u36135 \u29289 \u30340 \u27969 \u21160 \u65292 \u26356 \u26159 \u20449 \u24687 \u30340 \u31934 \u20934 \u20256 \u36882 \u19982 \u36152 \u26131 \u21512 \u35268 \u30340 \u26497 \u33268 \u25191 \u34892 \u12290 ',\
-                'stat-1': '\uc0\u25216 \u26415 \u26680 \u39564 \u35206 \u30422 ', 'stat-2': '\u34892 \u19994 \u27785 \u28096 \u24180 \u25968 ',\
-                'contact-t': '\uc0\u24320 \u21551 \u20840 \u29699 \u19987 \u19994 \u21327 \u20316 ', 'btn-submit': '\u25552 \u20132 \u21672 \u35810  | Send Inquiry'\
-            \},\
-            en: \{\
-                'nav-home': 'Home', 'nav-services': 'Logistics', 'nav-trade': 'Trade Services', 'nav-data': 'Analytics', 'nav-about': 'About', 'nav-contact': 'Contact', 'nav-company-cn': 'Shenzhen Prevein SCM',\
-                'hero-tag': 'Global Trade & SCM',\
-                'hero-title': 'Engineering-Led<br><span class="text-[#C5A059]">Global Supply</span> Chain',\
-                'hero-sub': 'Leveraging a M.Eng in Mining (USTB) to provide one-stop solutions covering <strong>Trade Agency, Technical Sourcing, and Precision Logistics</strong>.',\
-                'btn-audit': 'Get Trade & Logistics Audit', 'btn-explore': 'Explore Trade Services',\
-                'diff-title': 'Why Prevein is More Than a Forwarder', 'diff-sub': 'Our engineering roots provide a "Technical Eye" for precise industrial components.',\
-                'home-card-1-t': 'Mining Engineering DNA', 'home-card-1-d': 'We understand technical specs and blueprints. In the field of precision spares, we identify spec risks before shipment.',\
-                'home-card-2-t': 'AU-CN Dual-Base', 'home-card-2-d': 'Newcastle HQ manages onsite demands while Shenzhen center operates within the manufacturing hub.',\
-                'home-card-3-t': 'Global Corridors', 'home-card-3-d': 'Building industrial green channels from China\'92s manufacturing belt to global mining and energy sectors.',\
-                'trade-title': 'Industrial Trade & Sourcing',\
-                'trade-intro': 'Prevein does more than move cargo. we provide professional sourcing agency and export compliance services, bridging the gap between overseas demand and Chinese manufacturing.',\
-                't1-t': 'Technical Sourcing', 't1-d': 'Finding high-match suppliers in China based on onsite technical standards and conducting sample testing.',\
-                't2-t': 'Export & Compliance', 't2-d': 'Providing foreign exchange, customs clearance, and tax refund services, ensuring full compliance.',\
-                't3-t': 'Trade Architecture', 't3-d': 'Designing optimal trade structures (e.g., offshore or entrepot trade) to minimize overall project costs.',\
-                'trade-box-1-t': 'Sourcing Case', 'trade-box-1-h': 'High-Voltage Cable Systems', 'trade-box-1-p': 'From sourcing leading Chinese manufacturers to technical verification and delivery to AU, saving 30% in costs.',\
-                'trade-box-2-t': 'Compliance', 'trade-box-2-h': 'AS/NZS Alignment', 'trade-box-2-p': 'Ensuring every exported industrial component meets the destination country standards (e.g., AU certification).',\
-                'service-title': 'Precision Logistics', 'service-sub': 'End-to-end industrial SCM solutions focusing on high-value and time-critical cargo.',\
-                's1-t': 'Global Project Logistics', 's1-d': 'Transport for heavy machinery and energy equipment, handling OOG cargo and remote last-mile delivery.',\
-                's2-t': 'Precision Air Freight', 's2-d': 'Rapid logistics for critical spares like PLC and sensors, minimizing operational downtime onsite.',\
-                's3-t': 'Technical QC & Sourcing', 's3-d': 'Pre-shipment technical verification by engineers. We are your technical station at the factory gate.',\
-                'data-title': 'Performance Analytics', 'data-sub': 'Data-driven optimization reduces lead times by over 20% compared to traditional models.',\
-                'data-btn-1': 'Lead Time Comparison', 'data-btn-2': 'Trade Portfolio',\
-                'about-t': 'Founder Story: From Vein to Chain', 'about-d1': 'Founded by a M.Eng in Mining (USTB). Our technical foundation enables a deeper understanding of industrial complexities.',\
-                'about-d2': 'Supply chain is about accurate information flow and peak performance in trade compliance.',\
-                'stat-1': 'Technical Verification', 'stat-2': 'Years of Experience',\
-                'contact-t': 'Start Global Collaboration', 'btn-submit': 'Send Inquiry'\
-            \}\
-        \};\
-\
-        // \uc0\u35821 \u35328 \u20999 \u25442 \u20989 \u25968 \
-        function setLanguage(lang) \{\
-            currentLang = lang;\
-            document.getElementById('btn-cn').className = `lang-btn $\{lang === 'cn' ? 'active' : ''\}`;\
-            document.getElementById('btn-en').className = `lang-btn $\{lang === 'en' ? 'active' : ''\}`;\
-            \
-            Object.keys(langData[lang]).forEach(id => \{\
-                const el = document.getElementById(id);\
-                if (el) el.innerHTML = langData[lang][id];\
-            \});\
-            \
-            updateChart('efficiency'); // \uc0\u26356 \u26032 \u22270 \u34920 \u25991 \u26696 \
-        \}\
-\
-        // \uc0\u28378 \u21160 \u30417 \u21548 \u65306 \u23548 \u33322 \u39640 \u20142 \u19982 \u21160 \u30011 \u35302 \u21457 \
-        window.addEventListener('scroll', () => \{\
-            const sections = ['home', 'trade', 'services', 'data', 'about', 'contact'];\
-            let current = 'home';\
-            \
-            sections.forEach(s => \{\
-                const el = document.getElementById(s);\
-                if (window.pageYOffset >= el.offsetTop - 120) \{\
-                    current = s;\
-                \}\
-            \});\
-\
-            document.querySelectorAll('.nav-link').forEach(link => \{\
-                link.classList.remove('nav-active');\
-                if (link.getAttribute('href').includes(current)) \{\
-                    link.classList.add('nav-active');\
-                \}\
-            \});\
-\
-            document.querySelectorAll('.section-animate').forEach(el => \{\
-                if (window.pageYOffset >= el.offsetTop - window.innerHeight * 0.9) \{\
-                    el.classList.add('visible');\
-                \}\
-            \});\
-        \});\
-\
-        // \uc0\u22270 \u34920 \u26356 \u26032 \u36923 \u36753 \
-        function updateChart(mode) \{\
-            const ctx = document.getElementById('businessChart').getContext('2d');\
-            if (myChart) myChart.destroy();\
-\
-            const titleEl = document.getElementById('chart-title');\
-            \
-            if (mode === 'efficiency') \{\
-                titleEl.innerText = currentLang === 'cn' ? '\uc0\u29289 \u27969 \u26102 \u25928 \u23545 \u27604  (Lead Time / \u22825 )' : 'Lead Time Comparison (Days)';\
-                myChart = new Chart(ctx, \{\
-                    type: 'bar',\
-                    data: \{\
-                        labels: currentLang === 'cn' ? ['\uc0\u20013 \u28595 \u19987 \u32447 ', '\u20013 \u22269 -\u21335 \u32654 ', '\u20013 \u22269 -\u38750 \u27954 '] : ['CN-AU', 'CN-LATAM', 'CN-Africa'],\
-                        datasets: [\
-                            \{ label: currentLang === 'cn' ? '\uc0\u20256 \u32479 \u36135 \u36816 ' : 'Traditional', data: [12, 22, 28], backgroundColor: '#D1D5DB', borderRadius: 4 \},\
-                            \{ label: currentLang === 'cn' ? '\uc0\u38082 \u36828 \u19987 \u32447 ' : 'Prevein', data: [8, 16, 21], backgroundColor: '#003366', borderRadius: 4 \}\
-                        ]\
-                    \},\
-                    options: \{ \
-                        responsive: true, \
-                        maintainAspectRatio: false,\
-                        plugins: \{ legend: \{ position: 'top' \} \},\
-                        scales: \{ y: \{ beginAtZero: true, grid: \{ display: false \} \} \}\
-                    \}\
-                \});\
-            \} else \{\
-                titleEl.innerText = currentLang === 'cn' ? '\uc0\u25215 \u36816 \u21697 \u31867 \u20215 \u20540 \u20998 \u24067  (%)' : 'Cargo Value Distribution (%)';\
-                myChart = new Chart(ctx, \{\
-                    type: 'doughnut',\
-                    data: \{\
-                        labels: currentLang === 'cn' ? ['\uc0\u31934 \u23494 \u30005 \u23376 /PLC', '\u30719 \u23665 \u38646 \u22791 \u20214 ', '\u37325 \u22411 \u26426 \u26800 ', '\u20854 \u20182 '] : ['Electronics/PLC', 'Mining Spares', 'Machinery', 'Others'],\
-                        datasets: [\{\
-                            data: [45, 30, 15, 10],\
-                            backgroundColor: ['#003366', '#C5A059', '#1E40AF', '#78716C'],\
-                            borderWidth: 0\
-                        \}]\
-                    \},\
-                    options: \{ responsive: true, maintainAspectRatio: false, plugins: \{ legend: \{ position: 'bottom' \} \} \}\
-                \});\
-            \}\
-        \}\
-\
-        // \uc0\u21021 \u22987 \u21152 \u36733 \
-        window.onload = () => \{\
-            setLanguage('cn');\
-            // \uc0\u35302 \u21457 \u39318 \u23631 \u21160 \u30011 \
-            document.querySelectorAll('.section-animate').forEach(el => \{\
-                if (window.pageYOffset >= el.offsetTop - window.innerHeight) \{\
-                    el.classList.add('visible');\
-                \}\
-            \});\
-        \};\
-    </script>\
-</body>\
-</html>}
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Inter', 'Noto Sans SC', sans-serif;
+            background-color: var(--bg);
+            color: #2D2D2D;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            max-height: 400px;
+        }
+
+        .nav-link { position: relative; transition: color 0.3s; }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after, .nav-active::after { width: 100%; }
+        .nav-active { color: var(--primary) !important; font-weight: 700; }
+
+        .lang-btn {
+            border: 1px solid #E5E7EB;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .section-animate {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        .section-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-stone-200">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                <div class="w-10 h-10 bg-[#003366] rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-inner">P</div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-bold tracking-tight text-[#003366] leading-none">PREVEIN <span class="text-[#C5A059]">GLOBAL</span></span>
+                    <span id="nav-company-cn" class="text-[10px] text-stone-400 font-medium">深圳铂远供应链</span>
+                </div>
+            </div>
+            
+            <div class="hidden md:flex space-x-8 text-sm font-medium items-center">
+                <a href="#home" id="nav-home" class="nav-link text-stone-600 hover:text-[#003366]">首页</a>
+                <a href="#trade" id="nav-trade" class="nav-link text-stone-600 hover:text-[#003366]">外贸服务</a>
+                <a href="#services" id="nav-services" class="nav-link text-stone-600 hover:text-[#003366]">精准物流</a>
+                <a href="#data" id="nav-data" class="nav-link text-stone-600 hover:text-[#003366]">效能分析</a>
+                <a href="#about" id="nav-about" class="nav-link text-stone-600 hover:text-[#003366]">关于铂远</a>
+                <a href="#contact" id="nav-contact" class="nav-link text-stone-600 hover:text-[#003366]">联系合作</a>
+                
+                <div class="flex space-x-1 ml-4 border-l pl-4 border-stone-200">
+                    <button id="btn-cn" onclick="setLanguage('cn')" class="lang-btn active">CN</button>
+                    <button id="btn-en" onclick="setLanguage('en')" class="lang-btn">EN</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section id="home" class="relative py-32 md:py-48 px-6 overflow-hidden bg-stone-900">
+            <div class="absolute inset-0 opacity-40">
+                <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=2000" alt="Trade & Logistics" class="w-full h-full object-cover">
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-r from-stone-900 via-stone-900/60 to-transparent"></div>
+            <div class="relative max-w-7xl mx-auto text-white">
+                <div class="max-w-3xl">
+                    <span id="hero-tag" class="inline-block bg-[#C5A059] text-white text-xs font-bold px-3 py-1 rounded-sm mb-6 tracking-widest uppercase">Engineering-Led Trade & SCM</span>
+                    <h1 id="hero-title" class="text-4xl md:text-7xl font-bold mb-8 tracking-tight leading-tight">
+                        工程师级监管<br><span class="text-[#C5A059]">链接全球</span>供应链
+                    </h1>
+                    <p id="hero-sub" class="text-xl md:text-2xl font-light mb-12 text-stone-300 leading-relaxed">
+                        依托北京科技大学采矿工程硕士背景，为全球工业、能源及基建项目提供<strong>外贸代理、技术代采及精准物流</strong>的一站式方案。
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+                        <a href="#contact" id="btn-audit" class="bg-[#C5A059] hover:bg-[#A38446] text-white px-10 py-4 rounded-sm font-bold shadow-xl text-center">获取免费咨询</a>
+                        <a href="#trade" id="btn-explore" class="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white border border-white/30 px-10 py-4 rounded-sm font-bold text-center">探索外贸服务</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-24 px-6 max-w-7xl mx-auto section-animate">
+            <div class="text-center mb-16">
+                <h2 id="diff-title" class="text-3xl font-bold text-[#003366] mb-4 text-center">铂远核心优势</h2>
+                <p id="diff-sub" class="text-stone-500 text-center">我们不仅是搬运工，更是您在工业供应链中的技术大脑</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-16 text-center">
+                <div class="flex flex-col items-center">
+                    <div class="text-4xl mb-6">⚒️</div>
+                    <h4 id="h-c1-t" class="font-bold text-xl mb-4">工程基因</h4>
+                    <p id="h-c1-d" class="text-stone-500 text-sm">理解技术图纸，在深圳制造端进行精准的样件校验与规格核对。</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-4xl mb-6">📍</div>
+                    <h4 id="h-c2-t" class="font-bold text-xl mb-4">深澳支点</h4>
+                    <p id="h-c2-d" class="text-stone-500 text-sm">纽卡斯尔把握需求，深圳掌控货源，实现从工厂到工地的无缝衔接。</p>
+                </div>
+                <div class="flex flex-col items-center">
+                    <div class="text-4xl mb-6">🌍</div>
+                    <h4 id="h-c3-t" class="font-bold text-xl mb-4">全球链路</h4>
+                    <p id="h-c3-d" class="text-stone-500 text-sm">构建通达全球主要矿区与基建基地的工业品外贸走廊。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="trade" class="py-24 bg-white px-6 section-animate">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 id="trade-title" class="text-3xl md:text-4xl font-bold text-[#003366] mb-8">工业品外贸与技术代采</h2>
+                    <p id="trade-intro" class="text-stone-600 text-lg mb-10">我们为全球买家提供从供应商搜索、技术核验到进出口代理的全流程服务。</p>
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <span class="text-[#C5A059] font-bold">●</span>
+                            <div>
+                                <h5 id="t1-t" class="font-bold text-stone-900">技术选型与代采</h5>
+                                <p id="t1-d" class="text-stone-500 text-sm">协助海外工程师在中国筛选符合 AS/NZS 等国际标准的工业零件。</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <span class="text-[#C5A059] font-bold">●</span>
+                            <div>
+                                <h5 id="t2-t" class="font-bold text-stone-900">贸易合规与退税</h5>
+                                <p id="t2-d" class="text-stone-500 text-sm">专业的收汇结汇、报关单据准备及合规性审查。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-stone-50 p-10 rounded-3xl">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm mb-6">
+                        <h6 id="case-t" class="text-[#C5A059] text-xs font-bold uppercase mb-2">Sourcing Case</h6>
+                        <p id="case-p" class="text-stone-700 text-sm font-medium italic">“成功为澳洲某金矿项目在中国境内完成了全套高压连接器的技术比对与贸易发运，综合降本达 25%。”</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="py-24 bg-stone-50 px-6 section-animate">
+            <div class="max-w-7xl mx-auto">
+                <h2 id="service-title" class="text-3xl font-bold text-center mb-16 text-[#003366]">精准物流体系</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="p-8 bg-white rounded-xl shadow-sm border border-stone-100">
+                        <h4 id="s1-t" class="text-xl font-bold mb-4">项目物流 (Project)</h4>
+                        <p id="s1-d" class="text-stone-500 text-sm">针对超限设备、重型机械的跨国联运方案。</p>
+                    </div>
+                    <div class="p-8 bg-white rounded-xl shadow-sm border border-stone-100">
+                        <h4 id="s2-t" class="text-xl font-bold mb-4">空运专线 (Air)</h4>
+                        <p id="s2-d" class="text-stone-500 text-sm">针对 PLC、传感器等核心备件的极速全球交付。</p>
+                    </div>
+                    <div class="p-8 bg-white rounded-xl shadow-sm border border-stone-100">
+                        <h4 id="s3-t" class="text-xl font-bold mb-4">品控监管 (QC)</h4>
+                        <p id="s3-d" class="text-stone-500 text-sm">工程师驻点核验，确保离厂货物“零缺陷”。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="data" class="py-24 bg-white px-6 section-animate">
+            <div class="max-w-7xl mx-auto">
+                <h2 id="data-title" class="text-3xl font-bold text-center mb-16 text-stone-900">数据分析与效能</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+                    <div class="space-y-4">
+                        <button onclick="updateChart('efficiency')" id="d-b1" class="w-full text-left p-6 bg-stone-50 rounded-xl border-l-4 border-[#003366] font-bold">时效分析</button>
+                        <button onclick="updateChart('categories')" id="d-b2" class="w-full text-left p-6 bg-stone-50 rounded-xl border-l-4 border-[#C5A059] font-bold">品类分布</button>
+                    </div>
+                    <div class="lg:col-span-2 bg-stone-50 p-8 rounded-3xl h-[400px]">
+                        <div id="chart-title" class="text-lg font-bold mb-4">点击左侧切换</div>
+                        <div class="chart-container">
+                            <canvas id="businessChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="py-24 px-6 max-w-7xl mx-auto section-animate">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
+                <div>
+                    <h2 id="about-t" class="text-3xl font-bold mb-8">创始人：工程硕士背景</h2>
+                    <p id="about-d" class="text-stone-600 leading-relaxed">铂远 (Prevein) 创始人毕业于北京科技大学采矿工程专业。我们坚信，在复杂的工业品跨境环节中，技术洞察力是降低物流风险的核心。</p>
+                </div>
+                <div class="bg-[#003366] p-12 rounded-3xl text-white">
+                    <h4 class="text-2xl font-bold italic">“Technical Integrity in Every Shipment.”</h4>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-24 bg-stone-900 text-white px-6">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <div>
+                    <h2 id="contact-t" class="text-3xl font-bold mb-8 text-[#C5A059]">联系合作</h2>
+                    <div class="space-y-6 text-stone-300">
+                        <p>🇦🇺 AU: Bar Beach, Newcastle, NSW 2300</p>
+                        <p>🇨🇳 CN: 深圳市宝安区西乡街道满京华艺峦大厦1座1002</p>
+                        <p>📧 Email: info@prevein.com</p>
+                    </div>
+                </div>
+                <form class="bg-white p-10 rounded-2xl space-y-6">
+                    <input type="text" placeholder="Name" class="w-full border-b py-3 text-stone-800 outline-none">
+                    <button class="w-full bg-[#003366] text-white py-4 rounded font-bold">提交咨询</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        let currentLang = 'cn';
+        let myChart;
+
+        const langData = {
+            cn: {
+                'nav-home': '首页', 'nav-trade': '外贸服务', 'nav-services': '精准物流', 'nav-data': '效能分析', 'nav-about': '关于铂远', 'nav-contact': '联系合作', 'nav-company-cn': '深圳铂远供应链',
+                'hero-tag': '全球贸易与供应链', 'hero-title': '工程师级监管<br><span class="text-[#C5A059]">链接全球</span>供应链', 'hero-sub': '依托北京科技大学采矿工程硕士背景，为全球工业项目提供<strong>外贸代理、技术代采及精准物流</strong>方案。',
+                'trade-title': '工业品外贸与技术代采', 'trade-intro': '铂远不仅运送货物，更为全球买家提供专业的采购代理与出口合规服务。',
+                't1-t': '技术选型与代采', 't1-d': '协助海外工程师在中国筛选符合国际标准的工业零件。',
+                't2-t': '贸易合规与退税', 't2-d': '专业的收汇结汇、报关单据准备及合规性审查。',
+                'service-title': '精准物流体系', 'd-b1': '时效分析', 'd-b2': '品类分布',
+                'about-t': '创始人：工程硕士背景', 'about-d': '铂远 (Prevein) 创始人毕业于北京科技大学采矿工程专业。',
+                'contact-t': '联系合作'
+            },
+            en: {
+                'nav-home': 'Home', 'nav-trade': 'Trade', 'nav-services': 'Logistics', 'nav-data': 'Analytics', 'nav-about': 'About', 'nav-contact': 'Contact', 'nav-company-cn': 'Prevein SCM',
+                'hero-tag': 'Global Trade & SCM', 'hero-title': 'Engineering-Led<br><span class="text-[#C5A059]">Global Supply</span> Chain', 'hero-sub': 'Providing <strong>Trade Agency, Technical Sourcing, and Precision Logistics</strong> for global industrial projects.',
+                'trade-title': 'Industrial Trade & Sourcing', 'trade-intro': 'We provide sourcing agency and export compliance services for global buyers.',
+                't1-t': 'Technical Sourcing', 't1-d': 'Assisting overseas engineers in sourcing standard components in China.',
+                't2-t': 'Compliance & Tax', 't2-d': 'Professional forex handling, customs documentation, and compliance audit.',
+                'service-title': 'Precision Logistics', 'd-b1': 'Lead Time', 'd-b2': 'Cargo Split',
+                'about-t': 'Founder: M.Eng Background', 'about-d': 'Prevein was founded by a mining engineer (USTB) with deep technical insights.',
+                'contact-t': 'Contact Us'
+            }
+        };
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${lang}`).classList.add('active');
+            Object.keys(langData[lang]).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = langData[lang][id];
+            });
+            updateChart('efficiency');
+        }
+
+        window.addEventListener('scroll', () => {
+            document.querySelectorAll('.section-animate').forEach(el => {
+                if (window.pageYOffset >= el.offsetTop - window.innerHeight * 0.9) el.classList.add('visible');
+            });
+        });
+
+        function updateChart(mode) {
+            const ctx = document.getElementById('businessChart').getContext('2d');
+            if (myChart) myChart.destroy();
+            const labels = mode === 'efficiency' ? (currentLang === 'cn' ? ['中澳线', '南美线', '非洲线'] : ['AU Line', 'LATAM Line', 'Africa Line']) : (currentLang === 'cn' ? ['电子件', '矿山备件', '机械'] : ['Electronics', 'Spares', 'Machinery']);
+            const data = mode === 'efficiency' ? [8, 16, 21] : [45, 35, 20];
+            myChart = new Chart(ctx, {
+                type: mode === 'efficiency' ? 'bar' : 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Value',
+                        data: data,
+                        backgroundColor: ['#003366', '#C5A059', '#1E40AF']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        window.onload = () => { setLanguage('cn'); };
+    </script>
+</body>
+</html>
