@@ -3,82 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
     <title>Prevein Global | 铂远全球供应链 - 工程师级贸易与物流方案</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- 引入 Firebase SDK (后端存储与查询支持) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase 配置信息
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        let currentUser = null;
+        const ADMIN_PASSCODE = "Prevein2026"; // 默认管理口令，你可以修改这里
+
+        // 初始化认证逻辑
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("认证失败:", error);
+            }
+        };
+
+        onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+        });
+
+        initAuth();
+
+        // 提交咨询函数
+        window.submitInquiry = async (event) => {
+            event.preventDefault();
+            const formBtn = document.getElementById('form-btn');
+            const statusMsg = document.getElementById('form-status');
+            
+            if (!currentUser) {
+                statusMsg.innerHTML = currentLang === 'cn' ? "系统连接中，请稍后再试..." : "Connecting to system, please try later...";
+                statusMsg.className = "text-sm text-orange-500 mt-4 font-medium";
+                return;
+            }
+
+            const name = document.getElementById('form-input-name').value;
+            const message = document.getElementById('form-input-msg').value;
+
+            formBtn.disabled = true;
+            formBtn.innerText = currentLang === 'cn' ? "提交中..." : "Submitting...";
+
+            try {
+                const inquiriesCol = collection(db, 'artifacts', appId, 'public', 'data', 'inquiries');
+                await addDoc(inquiriesCol, {
+                    clientName: name,
+                    requirements: message,
+                    timestamp: serverTimestamp(),
+                    source: 'official-website'
+                });
+
+                statusMsg.innerHTML = currentLang === 'cn' ? "✓ 提交成功！我们将尽快联络您。" : "✓ Submitted successfully! We'll contact you soon.";
+                statusMsg.className = "text-sm text-green-600 mt-4 font-medium";
+                document.getElementById('inquiry-form').reset();
+            } catch (error) {
+                statusMsg.innerHTML = currentLang === 'cn' ? "提交失败，请重试。" : "Submission failed. Please retry.";
+                statusMsg.className = "text-sm text-red-600 mt-4 font-medium";
+            } finally {
+                formBtn.disabled = false;
+                formBtn.innerText = langData[currentLang]['form-btn'];
+            }
+        };
+
+        // 获取数据逻辑
+        let unsubscribe = null;
+        function startInquiryListener() {
+            if (unsubscribe) unsubscribe();
+            const q = collection(db, 'artifacts', appId, 'public', 'data', 'inquiries');
+            unsubscribe = onSnapshot(q, (snapshot) => {
+                const inquiries = [];
+                snapshot.forEach((doc) => {
+                    inquiries.push({ id: doc.id, ...doc.data() });
+                });
+                inquiries.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+                renderAdminTable(inquiries);
+            });
+        }
+
+        function renderAdminTable(data) {
+            const container = document.getElementById('admin-data-list');
+            if (!container) return;
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-stone-400 text-center py-8">暂无客户咨询数据</p>';
+                return;
+            }
+            container.innerHTML = data.map(item => `
+                <div class="p-4 border-b border-stone-100 hover:bg-stone-50 transition-colors">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="font-bold text-[#003366]">${item.clientName || '匿名客户'}</span>
+                        <span class="text-[10px] text-stone-400">${item.timestamp ? new Date(item.timestamp.seconds * 1000).toLocaleString() : '处理中...'}</span>
+                    </div>
+                    <p class="text-sm text-stone-600 leading-relaxed">${item.requirements || '无内容'}</p>
+                    <button onclick="deleteInquiry('${item.id}')" class="mt-2 text-[10px] text-red-400 hover:text-red-600 underline">删除记录</button>
+                </div>
+            `).join('');
+        }
+
+        window.deleteInquiry = async (docId) => {
+            if (!confirm("确定要删除这条咨询记录吗？")) return;
+            try {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'inquiries', docId));
+            } catch (error) { alert("删除失败"); }
+        };
+
+        // 切换后台视图并进行口令检查
+        window.toggleAdmin = () => {
+            const dashboard = document.getElementById('admin-dashboard');
+            
+            // 如果面板目前是隐藏的，则要求输入口令
+            if (dashboard.classList.contains('hidden')) {
+                const pass = prompt(currentLang === 'cn' ? "请输入管理口令进入后台：" : "Please enter admin passcode:");
+                if (pass === ADMIN_PASSCODE) {
+                    dashboard.classList.remove('hidden');
+                    startInquiryListener();
+                } else if (pass !== null) {
+                    alert(currentLang === 'cn' ? "口令错误！" : "Incorrect passcode!");
+                }
+            } else {
+                dashboard.classList.add('hidden');
+                if (unsubscribe) unsubscribe();
+            }
+        };
+    </script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Inter:wght@300;400;600;700&display=swap');
-        
-        :root {
-            --primary: #003366;
-            --accent: #C5A059;
-            --bg: #FDFCFB;
-        }
-
+        :root { --primary: #003366; --accent: #C5A059; --bg: #FDFCFB; }
         html { scroll-behavior: smooth; }
-
-        body {
-            font-family: 'Inter', 'Noto Sans SC', sans-serif;
-            background-color: var(--bg);
-            color: #2D2D2D;
-        }
-
-        .chart-container {
-            position: relative;
-            width: 100%;
-            height: 350px;
-            max-height: 400px;
-        }
-
+        body { font-family: 'Inter', 'Noto Sans SC', sans-serif; background-color: var(--bg); color: #2D2D2D; }
+        .chart-container { position: relative; width: 100%; height: 350px; max-height: 400px; }
         .nav-link { position: relative; transition: color 0.3s; }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -4px;
-            left: 0;
-            background-color: var(--accent);
-            transition: width 0.3s ease;
-        }
+        .nav-link::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -4px; left: 0; background-color: var(--accent); transition: width 0.3s ease; }
         .nav-link:hover::after, .nav-active::after { width: 100%; }
         .nav-active { color: var(--primary) !important; font-weight: 700; }
-
-        .lang-btn {
-            border: 1px solid #E5E7EB;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .lang-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        /* 按钮悬停样式增强 */
-        .chart-toggle-btn {
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .chart-toggle-btn:hover {
-            background-color: var(--primary);
-            color: white;
-            border-color: var(--primary);
-            transform: translateX(5px);
-        }
-
-        .section-animate {
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease-out;
-        }
-        .section-animate.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .lang-btn { border: 1px solid #E5E7EB; padding: 2px 8px; border-radius: 4px; font-size: 12px; cursor: pointer; transition: all 0.2s; }
+        .lang-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+        .chart-toggle-btn { transition: all 0.3s ease; cursor: pointer; }
+        .chart-toggle-btn:hover { background-color: var(--primary); color: white; transform: translateX(5px); }
+        .section-animate { opacity: 0; transform: translateY(20px); transition: all 0.6s ease-out; }
+        .section-animate.visible { opacity: 1; transform: translateY(0); }
+        #admin-dashboard { z-index: 1000; background: rgba(0,0,0,0.5); }
     </style>
 </head>
 <body class="antialiased">
@@ -90,7 +171,7 @@
                 <div class="w-10 h-10 bg-[#003366] rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-inner">P</div>
                 <div class="flex flex-col">
                     <span class="text-xl font-bold tracking-tight text-[#003366] leading-none">PREVEIN <span class="text-[#C5A059]">GLOBAL</span></span>
-                    <span id="nav-company-cn" class="text-[10px] text-stone-400 font-medium">深圳铂远供应链</span>
+                    <span id="nav-company-cn" class="text-[10px] text-stone-400 font-medium tracking-wider">深圳铂远供应链</span>
                 </div>
             </div>
             
@@ -111,7 +192,7 @@
     </nav>
 
     <main>
-        <!-- 英雄区 -->
+        <!-- Hero Section -->
         <section id="home" class="relative py-32 md:py-48 px-6 overflow-hidden bg-stone-900">
             <div class="absolute inset-0 opacity-40">
                 <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=2000" alt="Trade & Logistics" class="w-full h-full object-cover">
@@ -124,7 +205,7 @@
                         工程师级监管<br><span class="text-[#C5A059]">链接全球</span>供应链
                     </h1>
                     <p id="hero-sub" class="text-xl md:text-2xl font-light mb-12 text-stone-300 leading-relaxed">
-                        依托北京科技大学采矿工程硕士背景，为全球工业、能源及基建项目提供<strong>外贸代理、技术代采及精准物流</strong>的一站式方案。
+                        依托北京科技大学采矿工程硕士背景，为全球工业项目提供<strong>外贸代理、技术代采及精准物流</strong>方案。
                     </p>
                     <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
                         <a href="#contact" id="btn-audit" class="bg-[#C5A059] hover:bg-[#A38446] text-white px-10 py-4 rounded-sm font-bold shadow-xl text-center">获取免费咨询</a>
@@ -134,43 +215,18 @@
             </div>
         </section>
 
-        <!-- 差异化优势 -->
-        <section class="py-24 px-6 max-w-7xl mx-auto section-animate">
-            <div class="text-center mb-16">
-                <h2 id="diff-title" class="text-3xl font-bold text-[#003366] mb-4 text-center">铂远核心优势</h2>
-                <p id="diff-sub" class="text-stone-500 text-center">我们不仅是搬运工，更是您在工业供应链中的技术大脑</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-16 text-center">
-                <div class="flex flex-col items-center">
-                    <div class="text-4xl mb-6">⚒️</div>
-                    <h4 id="h-c1-t" class="font-bold text-xl mb-4">工程基因</h4>
-                    <p id="h-c1-d" class="text-stone-500 text-sm">理解技术图纸，在深圳制造端进行精准的样件校验与规格核对。</p>
-                </div>
-                <div class="flex flex-col items-center">
-                    <div class="text-4xl mb-6">📍</div>
-                    <h4 id="h-c2-t" class="font-bold text-xl mb-4">深澳支点</h4>
-                    <p id="h-c2-d" class="text-stone-500 text-sm">纽卡斯尔把握需求，深圳掌控货源，实现从工厂到工地的无缝衔接。</p>
-                </div>
-                <div class="flex flex-col items-center">
-                    <div class="text-4xl mb-6">🌍</div>
-                    <h4 id="h-c3-t" class="font-bold text-xl mb-4">全球链路</h4>
-                    <p id="h-c3-d" class="text-stone-500 text-sm">构建通达全球主要矿区与基建基地的工业品外贸走廊。</p>
-                </div>
-            </div>
-        </section>
-
         <!-- 外贸服务 Section -->
         <section id="trade" class="py-24 bg-white px-6 section-animate">
             <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                 <div>
                     <h2 id="trade-title" class="text-3xl md:text-4xl font-bold text-[#003366] mb-8">工业品外贸与技术代采</h2>
-                    <p id="trade-intro" class="text-stone-600 text-lg mb-10">我们为全球买家提供从供应商搜索、技术核验到进出口代理的全流程服务。</p>
+                    <p id="trade-intro" class="text-stone-600 text-lg mb-10 leading-relaxed">我们为全球买家提供从供应商搜索、技术核验到进出口代理的全流程服务。</p>
                     <div class="space-y-6">
                         <div class="flex gap-4">
                             <span class="text-[#C5A059] font-bold">●</span>
                             <div>
                                 <h5 id="t1-t" class="font-bold text-stone-900">技术选型与代采</h5>
-                                <p id="t1-d" class="text-stone-500 text-sm">协助海外工程师在中国筛选符合 AS/NZS 等国际标准的工业零件。</p>
+                                <p id="t1-d" class="text-stone-500 text-sm">协助海外工程师在中国筛选符合国际标准的工业零件。</p>
                             </div>
                         </div>
                         <div class="flex gap-4">
@@ -183,9 +239,9 @@
                     </div>
                 </div>
                 <div class="bg-stone-50 p-10 rounded-3xl">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm mb-6">
-                        <h6 id="case-t" class="text-[#C5A059] text-xs font-bold uppercase mb-2">Sourcing Case</h6>
-                        <p id="case-p" class="text-stone-700 text-sm font-medium italic">“成功为澳洲某金矿项目在中国境内完成了全套高压连接器的技术比对与贸易发运，综合降本达 25%。”</p>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm mb-6 border border-stone-100">
+                        <h6 id="case-t" class="text-[#C5A059] text-[10px] font-bold uppercase mb-2 tracking-widest">SOURCING CASE</h6>
+                        <p id="case-p" class="text-stone-700 text-sm font-medium italic leading-relaxed">“成功为澳洲某金矿项目在中国境内完成了全套高压连接器的技术比对与贸易发运，综合降本达 25%。”</p>
                     </div>
                 </div>
             </div>
@@ -195,35 +251,34 @@
         <section id="services" class="py-24 bg-stone-50 px-6 section-animate">
             <div class="max-w-7xl mx-auto">
                 <h2 id="service-title" class="text-3xl font-bold text-center mb-16 text-[#003366]">精准物流体系</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="p-8 bg-white rounded-xl shadow-sm border border-stone-100">
-                        <h4 id="s1-t" class="text-xl font-bold mb-4">项目物流 (Project)</h4>
-                        <p id="s1-d" class="text-stone-500 text-sm">针对超限设备、重型机械的跨国联运方案。</p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+                    <div class="p-8 bg-white rounded-xl shadow-sm border border-stone-100 hover:border-[#C5A059] transition-colors group">
+                        <h4 id="s1-t" class="text-xl font-bold mb-4 text-stone-800">项目物流 (Project)</h4>
+                        <p id="s1-d" class="text-stone-500 text-sm leading-relaxed">针对超限设备、重型机械的跨国联运方案。</p>
                     </div>
-                    <div class="p-8 bg-white rounded-xl shadow-sm border border-stone-100">
-                        <h4 id="s2-t" class="text-xl font-bold mb-4">空运专线 (Air)</h4>
-                        <p id="s2-d" class="text-stone-500 text-sm">针对 PLC、传感器等核心备件的极速全球交付。</p>
+                    <div class="p-8 bg-white rounded-xl shadow-sm border border-stone-100 hover:border-[#C5A059] transition-colors group">
+                        <h4 id="s2-t" class="text-xl font-bold mb-4 text-stone-800">空运专线 (Air)</h4>
+                        <p id="s2-d" class="text-stone-500 text-sm leading-relaxed">针对 PLC、传感器等核心备件的极速全球交付。</p>
                     </div>
-                    <div class="p-8 bg-white rounded-xl shadow-sm border border-stone-100">
-                        <h4 id="s3-t" class="text-xl font-bold mb-4">品控监管 (QC)</h4>
-                        <p id="s3-d" class="text-stone-500 text-sm">工程师驻点核验，确保离厂货物“零缺陷”。</p>
+                    <div class="p-8 bg-white rounded-xl shadow-sm border border-stone-100 hover:border-[#C5A059] transition-colors group">
+                        <h4 id="s3-t" class="text-xl font-bold mb-4 text-stone-800">品控监管 (QC)</h4>
+                        <p id="s3-d" class="text-stone-500 text-sm leading-relaxed">工程师驻点核验，确保离厂货物“零缺陷”。</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 数据分析 Section (优化后的悬停切换) -->
+        <!-- 数据分析 Section -->
         <section id="data" class="py-24 bg-white px-6 section-animate">
             <div class="max-w-7xl mx-auto">
                 <h2 id="data-title" class="text-3xl font-bold text-center mb-16 text-stone-900">数据分析与效能</h2>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
                     <div class="space-y-4">
-                        <!-- 修改为 onmouseenter 悬停触发 -->
                         <div onmouseenter="updateChart('efficiency')" id="d-b1" class="chart-toggle-btn w-full text-left p-6 bg-stone-50 rounded-xl border-l-4 border-[#003366] font-bold">时效分析</div>
                         <div onmouseenter="updateChart('categories')" id="d-b2" class="chart-toggle-btn w-full text-left p-6 bg-stone-50 rounded-xl border-l-4 border-[#C5A059] font-bold">品类分布</div>
                     </div>
-                    <div class="lg:col-span-2 bg-stone-50 p-8 rounded-3xl h-[400px]">
-                        <div id="chart-title" class="text-lg font-bold mb-6 text-[#003366]">时效分析 (Lead Time / Days)</div>
+                    <div class="lg:col-span-2 bg-stone-50 p-8 rounded-3xl h-[400px] shadow-inner">
+                        <div id="chart-title" class="text-sm font-bold mb-6 text-[#003366]">时效分析 (Lead Time / Days)</div>
                         <div class="chart-container">
                             <canvas id="businessChart"></canvas>
                         </div>
@@ -232,15 +287,16 @@
             </div>
         </section>
 
-        <!-- 关于我们 -->
+        <!-- 关于我 -->
         <section id="about" class="py-24 px-6 max-w-7xl mx-auto section-animate">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
                 <div>
-                    <h2 id="about-t" class="text-3xl font-bold mb-8">创始人：工程硕士背景</h2>
-                    <p id="about-d" class="text-stone-600 leading-relaxed">铂远 (Prevein) 创始人毕业于北京科技大学采矿工程专业。我们坚信，在复杂的工业品跨境环节中，技术洞察力是降低物流风险的核心。</p>
+                    <h2 id="about-t" class="text-3xl font-bold mb-8 text-stone-900">创始人：工程硕士背景</h2>
+                    <p id="about-d" class="text-stone-600 leading-relaxed text-lg">铂远 (Prevein) 创始人毕业于北京科技大学采矿工程专业。我们坚信，在复杂的工业品跨境环节中，技术洞察力是降低物流风险的核心。</p>
                 </div>
-                <div class="bg-[#003366] p-12 rounded-3xl text-white">
-                    <h4 class="text-2xl font-bold italic">“Technical Integrity in Every Shipment.”</h4>
+                <div class="bg-[#003366] p-12 rounded-3xl text-white relative overflow-hidden shadow-2xl">
+                    <div class="absolute -right-4 -top-4 text-white opacity-10 text-9xl font-bold">P</div>
+                    <h4 class="text-2xl font-bold italic relative z-10">“Technical Integrity in Every Shipment.”</h4>
                 </div>
             </div>
         </section>
@@ -248,21 +304,51 @@
         <!-- 联系我们 -->
         <section id="contact" class="py-24 bg-stone-900 text-white px-6">
             <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
-                <div>
-                    <h2 id="contact-t" class="text-3xl font-bold mb-8 text-[#C5A059]">联系合作</h2>
-                    <div class="space-y-6 text-stone-300">
-                        <p>🇦🇺 AU: Bar Beach, Newcastle, NSW 2300</p>
-                        <p>🇨🇳 CN: 深圳市宝安区西乡街道满京华艺峦大厦1座1002</p>
+                <div class="space-y-8">
+                    <h2 id="contact-t" class="text-3xl font-bold text-[#C5A059]">联系合作</h2>
+                    <p class="text-stone-400">我们将结合工程背景为您分析最优路径。</p>
+                    <div class="space-y-4 text-stone-300">
+                        <p>🇦🇺 AU HQ: Bar Beach, Newcastle, NSW 2300</p>
+                        <p>🇨🇳 CN Center: 深圳市宝安区西乡街道满京华艺峦大厦1座1002</p>
                         <p>📧 Email: info@prevein.com</p>
                     </div>
                 </div>
-                <form class="bg-white p-10 rounded-2xl space-y-6" onsubmit="event.preventDefault();">
-                    <input type="text" placeholder="Name" class="w-full border-b py-3 text-stone-800 outline-none">
-                    <button class="w-full bg-[#003366] text-white py-4 rounded font-bold">提交咨询</button>
+                <form id="inquiry-form" class="bg-white p-10 rounded-2xl space-y-6" onsubmit="submitInquiry(event)">
+                    <div class="space-y-2">
+                        <label id="form-name-label" class="text-[10px] text-stone-400 font-bold uppercase tracking-widest">您的姓名 / Name</label>
+                        <input id="form-input-name" type="text" required placeholder="请输入姓名" class="w-full border-b border-stone-100 py-3 text-stone-800 outline-none focus:border-[#C5A059] transition-colors">
+                    </div>
+                    <div class="space-y-2">
+                        <label id="form-msg-label" class="text-[10px] text-stone-400 font-bold uppercase tracking-widest">您的需求 / Message</label>
+                        <textarea id="form-input-msg" required placeholder="请描述您的业务需求" class="w-full border-b border-stone-100 py-3 text-stone-800 outline-none focus:border-[#C5A059] transition-colors"></textarea>
+                    </div>
+                    <button id="form-btn" type="submit" class="w-full bg-[#003366] text-white py-4 rounded font-bold hover:bg-[#002244] transition-colors shadow-lg">提交咨询</button>
+                    <div id="form-status" class="mt-4 text-center min-h-[20px]"></div>
                 </form>
             </div>
         </section>
     </main>
+
+    <!-- 页脚与隐藏后台入口 -->
+    <footer class="py-12 bg-black text-white px-6 opacity-60 border-t border-white/5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <p class="text-[10px]">© 2026 PREVEIN GLOBAL | 深圳铂远供应链管理有限公司. All Rights Reserved.</p>
+            <button onclick="toggleAdmin()" class="text-[10px] hover:text-[#C5A059] transition-colors">管理登录 / Admin</button>
+        </div>
+    </footer>
+
+    <!-- 后台管理面板 -->
+    <div id="admin-dashboard" class="fixed inset-0 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-2xl max-h-[80vh] rounded-3xl shadow-2xl flex flex-col overflow-hidden text-stone-800">
+            <div class="p-6 border-b border-stone-100 flex justify-between items-center bg-stone-50">
+                <h3 class="font-bold text-[#003366]">客户咨询管理后台</h3>
+                <button onclick="toggleAdmin()" class="text-stone-400 hover:text-stone-600">✕ 关闭</button>
+            </div>
+            <div id="admin-data-list" class="flex-1 overflow-y-auto bg-white">
+                <div class="p-12 text-center text-stone-400 italic">正在安全加载云端数据库...</div>
+            </div>
+        </div>
+    </div>
 
     <script>
         let currentLang = 'cn';
@@ -271,23 +357,25 @@
         const langData = {
             cn: {
                 'nav-home': '首页', 'nav-trade': '外贸服务', 'nav-services': '精准物流', 'nav-data': '效能分析', 'nav-about': '关于铂远', 'nav-contact': '联系合作', 'nav-company-cn': '深圳铂远供应链',
-                'hero-tag': '全球贸易与供应链', 'hero-title': '工程师级监管<br><span class="text-[#C5A059]">链接全球</span>供应链', 'hero-sub': '依托北京科技大学采矿工程硕士背景，为全球工业项目提供<strong>外贸代理、技术代采及精准物流</strong>方案。',
-                'trade-title': '工业品外贸与技术代采', 'trade-intro': '铂远不仅运送货物，更为全球买家提供专业的采购代理与出口合规服务。',
+                'hero-tag': 'Engineering-Led Trade & SCM', 'hero-title': '工程师级监管<br><span class="text-[#C5A059]">链接全球</span>供应链', 'hero-sub': '依托北京科技大学采矿工程硕士背景，为全球工业项目提供<strong>外贸代理、技术代采及精准物流</strong>方案。',
+                'btn-audit': '获取免费咨询', 'btn-explore': '探索外贸服务',
+                'trade-title': '工业品外贸与技术代采', 'trade-intro': '我们为全球买家提供从供应商搜索、技术核验到进出口代理的全流程服务。',
                 't1-t': '技术选型与代采', 't1-d': '协助海外工程师在中国筛选符合国际标准的工业零件。',
                 't2-t': '贸易合规与退税', 't2-d': '专业的收汇结汇、报关单据准备及合规性审查。',
-                'service-title': '精准物流体系', 'd-b1': '时效分析', 'd-b2': '品类分布',
-                'about-t': '创始人：工程硕士背景', 'about-d': '铂远 (Prevein) 创始人毕业于北京科技大学采矿工程专业。',
-                'contact-t': '联系合作'
+                'service-title': '精准物流体系', 'data-title': '数据分析与效能', 'd-b1': '时效分析', 'd-b2': '品类分布',
+                'form-name-label': '您的姓名 / Name', 'form-msg-label': '您的需求 / Message', 'form-btn': '提交咨询',
+                'form-input-name': '请输入姓名', 'form-input-msg': '请描述您的业务需求'
             },
             en: {
-                'nav-home': 'Home', 'nav-trade': 'Trade', 'nav-services': 'Logistics', 'nav-data': 'Analytics', 'nav-about': 'About', 'nav-contact': 'Contact', 'nav-company-cn': 'Prevein SCM',
-                'hero-tag': 'Global Trade & SCM', 'hero-title': 'Engineering-Led<br><span class="text-[#C5A059]">Global Supply</span> Chain', 'hero-sub': 'Providing <strong>Trade Agency, Technical Sourcing, and Precision Logistics</strong> for global industrial projects.',
-                'trade-title': 'Industrial Trade & Sourcing', 'trade-intro': 'We provide sourcing agency and export compliance services for global buyers.',
-                't1-t': 'Technical Sourcing', 't1-d': 'Assisting overseas engineers in sourcing standard components in China.',
-                't2-t': 'Compliance & Tax', 't2-d': 'Professional forex handling, customs documentation, and compliance audit.',
-                'service-title': 'Precision Logistics', 'd-b1': 'Lead Time', 'd-b2': 'Cargo Split',
-                'about-t': 'Founder: M.Eng Background', 'about-d': 'Prevein was founded by a mining engineer (USTB) with deep technical insights.',
-                'contact-t': 'Contact Us'
+                'nav-home': 'Home', 'nav-trade': 'Trade', 'nav-services': 'Logistics', 'nav-data': 'Analytics', 'nav-about': 'About', 'nav-contact': 'Contact', 'nav-company-cn': 'Prevein SCM Shenzhen',
+                'hero-tag': 'Engineering-Led Trade & SCM', 'hero-title': 'Engineering-Led<br><span class="text-[#C5A059]">Global Supply</span> Chain', 'hero-sub': 'Leveraging a M.Eng in Mining (USTB) to provide one-stop <strong>Trade Agency, Tech Sourcing, and Logistics</strong>.',
+                'btn-audit': 'Free Consultation', 'btn-explore': 'Trade Services',
+                'trade-title': 'Trade & Sourcing', 'trade-intro': 'We provide sourcing agency and export compliance for global industrial buyers.',
+                't1-t': 'Tech Sourcing', 't1-d': 'Sourcing components that meet international engineering standards.',
+                't2-t': 'Compliance', 't2-d': 'Forex handling, customs documents, and rigorous compliance audits.',
+                'service-title': 'Logistics System', 'data-title': 'Data & Performance', 'd-b1': 'Efficiency', 'd-b2': 'Cargo Split',
+                'form-name-label': 'Full Name', 'form-msg-label': 'Message', 'form-btn': 'Submit Inquiry',
+                'form-input-name': 'Your name', 'form-input-msg': 'Describe your needs'
             }
         };
 
@@ -297,7 +385,10 @@
             document.getElementById(`btn-${lang}`).classList.add('active');
             Object.keys(langData[lang]).forEach(id => {
                 const el = document.getElementById(id);
-                if (el) el.innerHTML = langData[lang][id];
+                if (el) {
+                    if (id.includes('input')) el.placeholder = langData[lang][id];
+                    else el.innerHTML = langData[lang][id];
+                }
             });
             updateChart('efficiency');
         }
@@ -311,45 +402,19 @@
         function updateChart(mode) {
             const ctx = document.getElementById('businessChart').getContext('2d');
             if (myChart) myChart.destroy();
-            
             const titleEl = document.getElementById('chart-title');
-            if (mode === 'efficiency') {
-                titleEl.innerText = currentLang === 'cn' ? '时效分析 (Lead Time / Days)' : 'Lead Time Analysis (Days)';
-            } else {
-                titleEl.innerText = currentLang === 'cn' ? '品类分布 (%)' : 'Cargo Distribution (%)';
-            }
-
-            const labels = mode === 'efficiency' ? (currentLang === 'cn' ? ['中澳线', '南美线', '非洲线'] : ['AU Line', 'LATAM Line', 'Africa Line']) : (currentLang === 'cn' ? ['电子件', '矿山备件', '机械'] : ['Electronics', 'Spares', 'Machinery']);
-            const data = mode === 'efficiency' ? [8, 16, 21] : [45, 35, 20];
-            
+            titleEl.innerText = mode === 'efficiency' ? (currentLang === 'cn' ? '时效分析 (Lead Time / Days)' : 'Lead Time Analysis') : (currentLang === 'cn' ? '品类分布 (%)' : 'Cargo Split');
             myChart = new Chart(ctx, {
                 type: mode === 'efficiency' ? 'bar' : 'doughnut',
                 data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Value',
-                        data: data,
-                        backgroundColor: ['#003366', '#C5A059', '#1E40AF']
-                    }]
+                    labels: mode === 'efficiency' ? (currentLang === 'cn' ? ['中澳线', '南美线', '非洲线'] : ['AU', 'LATAM', 'Africa']) : (currentLang === 'cn' ? ['电子件', '矿山备件', '机械'] : ['Electronics', 'Spares', 'Machinery']),
+                    datasets: [{ data: mode === 'efficiency' ? [8, 16, 21] : [45, 35, 20], backgroundColor: ['#003366', '#C5A059', '#1E40AF'] }]
                 },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: mode !== 'efficiency',
-                            position: 'bottom'
-                        }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: mode !== 'efficiency', position: 'bottom' } } }
             });
         }
 
-        // 初始化加载默认图表
-        window.onload = () => { 
-            setLanguage('cn'); 
-            updateChart('efficiency');
-        };
+        window.onload = () => { setLanguage('cn'); updateChart('efficiency'); };
     </script>
 </body>
 </html>
